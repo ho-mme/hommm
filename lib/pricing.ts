@@ -1,0 +1,162 @@
+import { addDays, getDay } from 'date-fns';
+import type { SiteSettingsMap } from '@/actions/settings';
+
+type PricingSettings = Pick<
+  SiteSettingsMap,
+  | 'pricePerNight'
+  | 'priceWeekend'
+  | 'priceSeasonHigh'
+  | 'priceSeasonLow'
+  | 'seasonHighStart'
+  | 'seasonHighEnd'
+  | 'longStayDiscount'
+  | 'longStayThreshold'
+  | 'depositPercent'
+>;
+
+export type PricingRuleRange = {
+  dateFrom: Date;
+  dateTo: Date;
+  pricePerNight: number;
+};
+
+function isHighSeason(date: Date, start: string, end: string): boolean {
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  const mmdd = `${mm}-${dd}`;
+
+  // Handle wrap-around (e.g. start=11-01, end=03-31)
+  if (start <= end) {
+    return mmdd >= start && mmdd <= end;
+  }
+  return mmdd >= start || mmdd <= end;
+}
+
+function isWeekendNight(date: Date): boolean {
+  const day = getDay(date);
+  // Friday (5) or Saturday (6) — the night of Fri→Sat and Sat→Sun
+  return day === 5 || day === 6;
+}
+
+/**
+ * Znajdź regułę cenową dla danej nocy.
+ * Reguły z cennika mają najwyższy priorytet.
+ */
+function findPricingRule(date: Date, rules: PricingRuleRange[]): PricingRuleRange | undefined {
+  const dayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  return rules.find((r) => dayStart >= r.dateFrom && dayStart <= r.dateTo);
+}
+
+export type PriceSource = 'rule' | 'weekend' | 'seasonHigh' | 'seasonLow' | 'base';
+
+const DAY_NAMES_PL = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So'] as const;
+
+export type NightDetail = {
+  date: Date;
+  dayName: string;
+  price: number;
+  source: PriceSource;
+  isWeekend: boolean;
+  isHighSeason: boolean;
+};
+
+/** Zwraca szczegóły cenowe dla każdej nocy pobytu */
+export function getNightDetails(
+  checkIn: Date,
+  checkOut: Date,
+  settings: PricingSettings,
+  pricingRules: PricingRuleRange[] = [],
+): NightDetail[] {
+  const details: NightDetail[] = [];
+  let current = new Date(checkIn);
+  const end = new Date(checkOut);
+
+  while (current < end) {
+    const weekend = isWeekendNight(current);
+    const highSeason = isHighSeason(current, settings.seasonHighStart, settings.seasonHighEnd);
+    const rule = findPricingRule(current, pricingRules);
+
+    let price: number;
+    let source: PriceSource;
+
+    if (rule) {
+      price = rule.pricePerNight;
+      source = 'rule';
+    } else {
+      price = settings.pricePerNight;
+      source = 'base';
+
+      if (highSeason && settings.priceSeasonHigh > 0) {
+        price = settings.priceSeasonHigh;
+        source = 'seasonHigh';
+      } else if (!highSeason && settings.priceSeasonLow > 0) {
+        price = settings.priceSeasonLow;
+        source = 'seasonLow';
+      }
+
+      if (weekend && settings.priceWeekend > 0 && settings.priceWeekend > price) {
+        price = settings.priceWeekend;
+        source = 'weekend';
+      }
+    }
+
+    details.push({
+      date: new Date(current),
+      dayName: DAY_NAMES_PL[getDay(current)],
+      price,
+      source,
+      isWeekend: weekend,
+      isHighSeason: highSeason,
+    });
+
+    current = addDays(current, 1);
+  }
+
+  return details;
+}
+
+export type PriceBreakdown = {
+  totalPrice: number;
+  nightPrices: number[];
+  discount: number;
+  priceBeforeDiscount: number;
+  depositAmount: number;
+};
+
+/**
+ * Calculate total price for a stay.
+ * Uses getNightDetails for per-night pricing (single source of truth).
+ */
+export function calculatePrice(
+  checkIn: Date,
+  checkOut: Date,
+  settings: PricingSettings,
+  pricingRules: PricingRuleRange[] = [],
+): PriceBreakdown {
+  const details = getNightDetails(checkIn, checkOut, settings, pricingRules);
+  const nights = details.map((d) => d.price);
+
+  const priceBeforeDiscount = nights.reduce((sum, p) => sum + p, 0);
+  let discount = 0;
+
+  if (
+    settings.longStayDiscount > 0 &&
+    settings.longStayThreshold > 0 &&
+    nights.length >= settings.longStayThreshold
+  ) {
+    discount = Math.round(priceBeforeDiscount * settings.longStayDiscount / 100);
+  }
+
+  const totalPrice = Math.round(priceBeforeDiscount - discount);
+  const depositAmount = settings.depositPercent > 0
+    ? Math.round(totalPrice * settings.depositPercent / 100)
+    : 0;
+
+  return {
+    totalPrice,
+    nightPrices: nights,
+    discount,
+    priceBeforeDiscount: Math.round(priceBeforeDiscount),
+    depositAmount,
+  };
+}
