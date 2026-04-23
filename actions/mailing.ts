@@ -6,7 +6,7 @@ import { verifySession, unauthorized } from '@/lib/auth';
 import { type TemplateKey, type EmailTemplate, type EmailTemplatesMap, interpolate, SAMPLE_VARS } from '@/lib/email-template-defaults';
 import { getEmailTemplates, getMailingLogoUrl } from '@/lib/email-templates';
 import { sendEmail, emailLayout } from '@/lib/mail';
-import { getSettings } from '@/actions/settings';
+import { getSettings } from '@/lib/settings';
 
 const SETTINGS_KEY = 'emailTemplates';
 const LOGO_KEY = 'mailingLogoUrl';

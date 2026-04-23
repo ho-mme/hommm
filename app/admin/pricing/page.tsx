@@ -1,6 +1,6 @@
 import { AdminShell } from '@/components/admin/AdminShell';
 import { getPricingRules } from '@/actions/pricing';
-import { getSettings } from '@/actions/settings';
+import { getSettings } from '@/lib/settings';
 import { PricingClient } from './PricingClient';
 
 export const dynamic = 'force-dynamic';

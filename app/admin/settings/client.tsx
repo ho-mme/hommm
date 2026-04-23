@@ -5,7 +5,12 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { updateSettings, addAdmin, removeAdmin, type SiteSettingsMap } from '@/actions/settings';
+import {
+  updateSettings,
+  addAdmin,
+  removeAdmin,
+} from '@/actions/settings';
+import type { SiteSettingsMap } from '@/lib/settings';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
 
 type AdminRow = {

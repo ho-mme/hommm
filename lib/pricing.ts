@@ -1,5 +1,5 @@
 import { addDays, getDay } from 'date-fns';
-import type { SiteSettingsMap } from '@/actions/settings';
+import type { SiteSettingsMap } from '@/lib/settings';
 
 type PricingSettings = Pick<
   SiteSettingsMap,
@@ -160,3 +160,4 @@ export function calculatePrice(
     depositAmount,
   };
 }
+

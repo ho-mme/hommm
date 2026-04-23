@@ -4,8 +4,8 @@ import { prisma } from '@/lib/db';
 import { reservationSchema } from '@/lib/validations';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { calculatePrice } from '@/lib/pricing';
-import { getSettings } from '@/actions/settings';
-import { getActivePricingRules } from '@/actions/pricing';
+import { getSettings } from '@/lib/settings';
+import { getActivePricingRules } from '@/lib/pricing-server';
 import {
   sendEmail,
   buildGuestConfirmationEmail,

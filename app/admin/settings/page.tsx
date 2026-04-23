@@ -1,4 +1,5 @@
-import { getSettings, getAdminWhitelist } from '@/actions/settings';
+import { getSettings } from '@/lib/settings';
+import { getAdminWhitelist } from '@/actions/settings';
 import { AdminShell } from '@/components/admin/AdminShell';
 import { SettingsClient } from './client';
 import { ICalManager } from './ICalManager';

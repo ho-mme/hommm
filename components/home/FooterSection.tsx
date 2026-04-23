@@ -4,7 +4,7 @@ import Image from 'next/image';
 import type { MouseEvent } from 'react';
 import { SectionBg } from '../SectionBg';
 import type { SectionContent } from '@/lib/content';
-import type { SiteSettingsMap } from '@/actions/settings';
+import type { SiteSettingsMap } from '@/lib/settings';
 import {
   MailIcon,
   PhoneIcon,

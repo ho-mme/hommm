@@ -8,7 +8,7 @@ export function unauthorized() {
 
 const COOKIE_NAME = 'admin_session';
 const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days (cookie/DB)
-const JWT_DURATION_MS = 24 * 60 * 60 * 1000; // 24h (JWT expiry — shorter for security)
+const JWT_DURATION_MS = 1 * 60 * 60 * 1000; // 1h (JWT expiry — shorter for security)
 
 export async function createSession(adminId: string) {
   // Clean expired sessions — fire & forget, nie blokuje logowania

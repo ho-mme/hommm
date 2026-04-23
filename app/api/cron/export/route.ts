@@ -40,19 +40,21 @@ export async function GET(request: NextRequest) {
     if (adminEmail) {
       try {
         const { sendEmail } = await import('@/lib/mail');
-        const json = JSON.stringify(exportData, null, 2);
-        const safeJson = json.slice(0, 50000)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;');
+        const dashboardUrl = `${process.env.NEXT_PUBLIC_SITE_URL || ''}/admin/dashboard`;
 
         await sendEmail({
           to: adminEmail,
-          subject: `HOMMM — Eksport danych ${new Date().toLocaleDateString('pl-PL')}`,
-          html: `<h2>Eksport danych HOMMM</h2>
-           <p>Eksport z ${new Date().toLocaleString('pl-PL')}.</p>
-           <p>Rezerwacji: ${reservations.length}, Stron: ${pages.length}, Sekcji: ${sections.length}</p>
-           <details><summary>Dane JSON</summary><pre style="font-size:11px;max-height:600px;overflow:auto">${safeJson}</pre></details>`,
+          subject: `HOMMM — Raport z eksportu danych ${new Date().toLocaleDateString('pl-PL')}`,
+          html: `<h2>Raport z eksportu danych HOMMM</h2>
+           <p>Eksport zakończony pomyślnie ${new Date().toLocaleString('pl-PL')}.</p>
+           <ul>
+             <li>Rezerwacji: ${reservations.length}</li>
+             <li>Stron: ${pages.length}</li>
+             <li>Sekcji: ${sections.length}</li>
+             <li>Ustawień: ${settings.length}</li>
+           </ul>
+           <p>Dane zostały zarchiwizowane w bazie danych. Pełny wgląd dostępny w panelu:</p>
+           <p><a href="${dashboardUrl}">${dashboardUrl}</a></p>`,
         });
       } catch (err) {
         console.error('[cron/export] Błąd wysyłki emaila eksportu:', err);

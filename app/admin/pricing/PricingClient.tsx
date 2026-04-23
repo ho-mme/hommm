@@ -14,7 +14,8 @@ import {
   deletePricingRule,
   type PricingRule,
 } from '@/actions/pricing';
-import { updateSettings, type SiteSettingsMap } from '@/actions/settings';
+import { updateSettings } from '@/actions/settings';
+import type { SiteSettingsMap } from '@/lib/settings';
 import { Trash2, Plus, Pencil } from 'lucide-react';
 import { calculatePrice, getNightDetails, type PricingRuleRange, type PriceSource } from '@/lib/pricing';
 

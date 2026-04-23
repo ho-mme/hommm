@@ -13,7 +13,7 @@ import { TopMenu, type MenuColors, type MenuView } from './TopMenu';
 import { ReservationModal } from './ReservationModal';
 import { useLocale } from '@/lib/i18n';
 import type { SectionContent } from '@/lib/content';
-import type { SiteSettingsMap } from '@/actions/settings';
+import type { SiteSettingsMap } from '@/lib/settings';
 
 import {
   BRAND_COLOR,
@@ -428,7 +428,7 @@ export function HomeClient({ sections: initialSections, settings, pricingRules =
                     return imgs.map((img, i) => (
                       <figure key={img.src} className={`reservation-visual-item ${cls[i] ?? ''}`}>
                         <Image
-                          src={img.src}
+                          src={img.thumbSrc || img.src}
                           alt={locale === 'pl' ? (img.altPl || '') : (img.altEn || '')}
                           fill
                           priority

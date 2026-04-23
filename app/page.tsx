@@ -1,6 +1,6 @@
 import { getHomeContent } from '@/lib/content';
-import { getSettings } from '@/actions/settings';
-import { getActivePricingRules } from '@/actions/pricing';
+import { getSettings } from '@/lib/settings';
+import { getActivePricingRules } from '@/lib/pricing-server';
 import { HomeClient } from '@/components/HomeClient';
 
 export const revalidate = 60;
