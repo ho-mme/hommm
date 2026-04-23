@@ -212,6 +212,26 @@ export function HomeClient({ sections: initialSections, settings, pricingRules =
     }
   }, [isReservationView, fetchAvailability]);
 
+  const handleDateRangeChange = useCallback(
+    (range: [Date | null, Date | null]) => {
+      const [start, end] = range;
+      if (start && end && start.getTime() < end.getTime()) {
+        const startMs = start.getTime();
+        const endMs = end.getTime();
+        const hasConflict = unavailableDates.some((d) => {
+          const t = d.getTime();
+          return t > startMs && t < endMs;
+        });
+        if (hasConflict) {
+          setReservationRange([start, null]);
+          return;
+        }
+      }
+      setReservationRange(range);
+    },
+    [unavailableDates]
+  );
+
   useEffect(() => {
     const mql = window.matchMedia('(max-width: 768px)');
     isMobileRef.current = mql.matches;
@@ -448,7 +468,7 @@ export function HomeClient({ sections: initialSections, settings, pricingRules =
               dateLocale={dateLocale}
               locale={locale}
               unavailableDates={unavailableDates}
-              onDateRangeChange={setReservationRange}
+              onDateRangeChange={handleDateRangeChange}
               reservationGuests={reservationGuests}
               onGuestsChange={setReservationGuests}
               totalPrice={totalPrice}
