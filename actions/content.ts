@@ -22,8 +22,7 @@ export async function getContent() {
   if (!session) return unauthorized();
 
   const sections = await prisma.section.findMany({
-    where: { page: { isHome: true } },
-    orderBy: { order: 'asc' },
+    orderBy: [{ page: { order: 'asc' } }, { order: 'asc' }],
     include: { page: { select: { slug: true } } },
   });
 
@@ -32,7 +31,12 @@ export async function getContent() {
 
 export async function getContentBySlug(slug: string) {
   const section = await prisma.section.findFirst({
-    where: { slug, page: { isHome: true }, isVisible: true },
+    where: {
+      OR: [
+        { slug },
+        { page: { slug } },
+      ],
+    },
     include: { page: { select: { slug: true } } },
   });
 
@@ -72,7 +76,13 @@ export async function updateContent(slug: string, data: UpdateContentData) {
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors };
 
   const section = await prisma.section.findFirst({
-    where: { slug, page: { isHome: true } },
+    where: {
+      OR: [
+        { slug },
+        { page: { slug } },
+      ],
+    },
+    include: { page: { select: { slug: true, isHome: true } } },
   });
 
   if (!section) {
@@ -95,6 +105,9 @@ export async function updateContent(slug: string, data: UpdateContentData) {
   });
 
   revalidatePath('/');
+  if (!section.page.isHome) {
+    revalidatePath(`/${section.page.slug}`);
+  }
 
   return { success: true, section: updated };
 }

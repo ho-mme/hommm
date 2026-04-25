@@ -16,6 +16,7 @@ type TopMenuProps = {
   onNavigate?: (view: MenuView) => void;
   forceColors?: MenuColors | null;
   menuLabels?: Record<string, string>;
+  hrefPrefix?: string;
 };
 
 const DEFAULT_COLORS: MenuColors = {
@@ -29,7 +30,7 @@ const MENU_ITEMS: Array<{ id: Exclude<MenuView, "home">; label: string }> = [
   { id: "rezerwuj", label: "rezerwuj" },
 ];
 
-export function TopMenu({ activeView = "home", onNavigate, forceColors = null, menuLabels }: TopMenuProps) {
+export function TopMenu({ activeView = "home", onNavigate, forceColors = null, menuLabels, hrefPrefix = "" }: TopMenuProps) {
   const { locale, setLocale, t } = useLocale();
   const [isCompact, setIsCompact] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -143,6 +144,11 @@ export function TopMenu({ activeView = "home", onNavigate, forceColors = null, m
     event: MouseEvent<HTMLAnchorElement>,
     view: Exclude<MenuView, "home">,
   ) => {
+    if (hrefPrefix) {
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
     event.preventDefault();
 
     if (view === "miejsca" || view === "rezerwuj") {
@@ -201,7 +207,7 @@ export function TopMenu({ activeView = "home", onNavigate, forceColors = null, m
             {MENU_ITEMS.map((item) => (
               <a
                 key={item.id}
-                href={`#${item.id === "koncept" ? "koncept" : "rezerwuj"}`}
+                href={`${hrefPrefix}#${item.id === "koncept" ? "koncept" : "rezerwuj"}`}
                 onClick={(event) => handleMenuClick(event, item.id)}
                 className={activeView === item.id ? "is-current" : undefined}
               >

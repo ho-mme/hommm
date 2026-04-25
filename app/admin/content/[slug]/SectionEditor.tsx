@@ -57,6 +57,10 @@ const SLUG_TO_VIEW: Record<string, string> = {
   rezerwacja: 'rezerwuj',
 };
 
+const SLUG_TO_PREVIEW_PATH: Record<string, string> = {
+  regulamin: '/regulamin',
+};
+
 // Slug → czytelne nazwy pól
 const FIELD_LABELS: Record<string, Record<string, { label: string; description: string; multiline?: boolean }>> = {
   hero: {
@@ -95,6 +99,9 @@ const FIELD_LABELS: Record<string, Record<string, { label: string; description: 
     rezerwuj_label: { label: 'Link: Rezerwuj', description: 'Nazwa pozycji menu nawigacyjnego' },
   },
   stopka: {},
+  regulamin: {
+    body: { label: 'Treść regulaminu', description: 'Pełna treść podstrony Regulamin', multiline: true },
+  },
 };
 
 const GALLERY_SECTIONS = new Set(['koncept', 'miejsce']);
@@ -147,9 +154,9 @@ export function SectionEditor({ section, galleryImages }: Props) {
 
   const anchor = SLUG_TO_ANCHOR[section.slug] ?? '';
   const viewParam = SLUG_TO_VIEW[section.slug];
-  const iframeSrc = viewParam
+  const iframeSrc = SLUG_TO_PREVIEW_PATH[section.slug] ?? (viewParam
     ? `/?view=${viewParam}`
-    : `/#${anchor}`;
+    : `/#${anchor}`);
 
   const reloadPreview = useCallback(() => {
     const iframe = iframeRef.current;

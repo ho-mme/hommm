@@ -31,6 +31,10 @@ import { SECTION_ICONS } from '@/lib/section-icons';
 
 type SectionLink = { slug: string; titlePl: string | null };
 
+const REQUIRED_CONTENT_SECTIONS: SectionLink[] = [
+  { slug: 'regulamin', titlePl: 'Regulamin' },
+];
+
 const OTHER_NAV_ITEMS = [
   { href: '/admin/reservations', label: 'Rezerwacje', Icon: CalendarDays },
   { href: '/admin/calendar', label: 'Kalendarz', Icon: CalendarRange },
@@ -58,6 +62,14 @@ function NavBadge({ count }: { count: number }) {
       {count}
     </span>
   );
+}
+
+function withRequiredContentSections(sections: SectionLink[]): SectionLink[] {
+  const seen = new Set(sections.map((section) => section.slug));
+  return [
+    ...sections,
+    ...REQUIRED_CONTENT_SECTIONS.filter((section) => !seen.has(section.slug)),
+  ];
 }
 
 function NavLinks({
@@ -201,8 +213,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     fetch('/api/content/sections')
       .then((res) => res.ok ? res.json() : [])
-      .then((data: SectionLink[]) => setSections(data))
-      .catch(() => {});
+      .then((data: SectionLink[]) => setSections(withRequiredContentSections(data)))
+      .catch(() => setSections(withRequiredContentSections([])));
     fetch('/api/admin/build-info')
       .then((res) => res.ok ? res.json() : null)
       .then((data: BuildInfo | null) => { if (data) setBuildInfo(data); })

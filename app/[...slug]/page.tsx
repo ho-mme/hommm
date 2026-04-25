@@ -6,6 +6,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { cache } from 'react';
 import type { Metadata } from 'next';
+import { SectionBg } from '@/components/SectionBg';
+import { getSettings } from '@/lib/settings';
+import { TopMenu } from '@/components/TopMenu';
+import { getHomeContent } from '@/lib/content';
+import { SubPageFooter } from '@/components/SubPageFooter';
 
 export const revalidate = 60;
 
@@ -53,27 +58,58 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SubPage({ params }: Props) {
   const { slug } = await params;
-  const page = await getPageBySlug(slug);
+  const pageSlug = slug.join('/');
+  const isRegulaminPage = pageSlug === 'regulamin';
+  const [page, settings, homeSections] = await Promise.all([
+    getPageBySlug(slug),
+    getSettings(),
+    getHomeContent(),
+  ]);
 
   if (!page || !page.isVisible) {
     notFound();
   }
 
-  return (
-    <main className="min-h-screen">
-      <nav className="px-4 py-3 border-b">
-        <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">← Strona główna</Link>
-      </nav>
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">{page.title}</h1>
+  const stopkaSection = homeSections.find((section) => section.slug === 'stopka');
 
+  return (
+    <main className="subpage-shell">
+      {isRegulaminPage ? (
+        <header className="subpage-logo-spacer" aria-label="HOMMM">
+          <Link href="/" className="subpage-logo-link" aria-label="Przejdź na stronę główną">
+            <span className="subpage-logo-mark" aria-hidden="true" />
+          </Link>
+        </header>
+      ) : (
+        <>
+          <TopMenu activeView="home" hrefPrefix="/" />
+
+          <section
+            className="section h-100vh bg-slider relative"
+            id="rezerwuj"
+            data-menu-font="#ffffff"
+            data-menu-logo="#ffffff"
+          >
+            <SectionBg src="/assets/hero.webp" objectPosition="center 70%" priority />
+            <div className="hero-logo-stage relative z-10" aria-hidden="true">
+              <img src="/assets/hommm.svg" alt="" className="hero-logo-main" />
+            </div>
+          </section>
+        </>
+      )}
+
+      <section
+        className="section subpage-content-section"
+        data-menu-font="#be1622"
+        data-menu-logo="#be1622"
+      >
+        <div className="container container-white subpage-content-container">
           {page.sections.map((section) => {
             const content = jsonToRecord(section.contentPl);
             return (
               <article
                 key={section.id}
-                className="mb-12"
+                className="subpage-content-block"
                 style={{
                   backgroundColor: section.bgColor || undefined,
                   backgroundImage: section.bgImage ? `url(${section.bgImage})` : undefined,
@@ -82,22 +118,22 @@ export default async function SubPage({ params }: Props) {
                 }}
               >
                 {section.titlePl && (
-                  <h2 className="text-2xl font-semibold mb-4">{section.titlePl}</h2>
+                  <h2>{section.titlePl}</h2>
                 )}
 
                 {content.heading && (
-                  <h3 className="text-xl font-medium mb-2">{content.heading}</h3>
+                  <h3>{content.heading}</h3>
                 )}
 
                 {content.body && (
                   <div
-                    className="prose max-w-none"
+                    className="subpage-rich-text"
                     dangerouslySetInnerHTML={{ __html: sanitizeHtml(content.body) }}
                   />
                 )}
 
                 {section.galleryImages.length > 0 && (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+                  <div className="subpage-gallery">
                     {section.galleryImages.map((img, i) => (
                       <Image
                         key={i}
@@ -106,7 +142,7 @@ export default async function SubPage({ params }: Props) {
                         width={400}
                         height={300}
                         sizes="(max-width:768px) 50vw, 33vw"
-                        className="rounded-lg w-full h-48 object-cover"
+                        className="subpage-gallery__image"
                       />
                     ))}
                   </div>
@@ -116,10 +152,12 @@ export default async function SubPage({ params }: Props) {
           })}
 
           {page.sections.length === 0 && (
-            <p className="text-muted-foreground">Ta strona nie ma jeszcze treści.</p>
+            <p className="subpage-empty">Ta strona nie ma jeszcze treści.</p>
           )}
         </div>
       </section>
+
+      <SubPageFooter settings={settings} stopkaSection={stopkaSection} />
     </main>
   );
 }

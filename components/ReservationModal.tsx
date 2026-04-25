@@ -281,7 +281,7 @@ export function ReservationModal({
                 />
                 <span>
                   {t('reservation.modal.rodo')}{' '}
-                  <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                  <a href="/regulamin" target="_blank" rel="noopener noreferrer">
                     {t('reservation.modal.rodo_link')}
                   </a>
                 </span>

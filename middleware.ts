@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtVerify } from 'jose';
+import { errors, jwtVerify } from 'jose';
 import { getJwtSecret } from '@/lib/env';
 
 export async function middleware(request: NextRequest) {
@@ -23,7 +23,11 @@ export async function middleware(request: NextRequest) {
       // Verify JWT signature and expiry only (no DB check in middleware)
       await jwtVerify(token, getJwtSecret());
       return NextResponse.next();
-    } catch {
+    } catch (err) {
+      if (err instanceof errors.JWTExpired) {
+        return NextResponse.next();
+      }
+
       const response = NextResponse.redirect(
         new URL('/admin/login', request.url)
       );

@@ -1091,6 +1091,250 @@ body {
 }
 
 /* =========================================================================
+   PUBLIC SUBPAGES
+   ========================================================================= */
+
+.subpage-shell {
+  min-height: 100vh;
+  background-color: #111;
+  background-image: url('/assets/hero.webp');
+  background-size: cover;
+  background-position: center 70%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.subpage-logo-spacer {
+  position: relative;
+  z-index: 20;
+  height: 150px;
+  width: calc(100% - (var(--container-gutter) * 2));
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+}
+
+.subpage-logo-mark {
+  display: block;
+  height: 120px;
+  aspect-ratio: 4.42 / 1;
+  background-color: var(--color-brand);
+  mask-image: url('/assets/hommm.svg');
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: url('/assets/hommm.svg');
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  transform-origin: center;
+  animation: subpage-logo-float 5200ms ease-in-out infinite;
+}
+
+.subpage-logo-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.subpage-logo-link:hover .subpage-logo-mark {
+  animation-duration: 3600ms;
+}
+
+@keyframes subpage-logo-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.015);
+  }
+}
+
+.subpage-content-section {
+  position: relative;
+  isolation: isolate;
+  align-items: flex-start;
+  background: #111;
+  border-bottom: none;
+  overflow: hidden;
+  padding: 0 var(--container-gutter);
+}
+
+.subpage-content-section::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/assets/hero.webp');
+  background-size: cover;
+  background-position: center 70%;
+  background-repeat: no-repeat;
+}
+
+.subpage-content-container {
+  position: relative;
+  z-index: 10;
+  box-shadow: none;
+  padding-top: clamp(42px, 7vw, 90px);
+  padding-bottom: clamp(54px, 8vw, 110px);
+  max-width: var(--container-max-width);
+  min-height: 100vh;
+  justify-content: flex-start;
+}
+
+.subpage-shell #kontakt .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.subpage-content-block {
+  width: 100%;
+  max-width: 920px;
+}
+
+.subpage-content-block + .subpage-content-block {
+  margin-top: clamp(34px, 5vw, 68px);
+}
+
+.subpage-content-block h2 {
+  margin: 0 0 18px;
+  color: var(--color-brand);
+  font-size: clamp(1.35rem, 2.3vw, 2rem);
+  line-height: 1.12;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.subpage-content-block h3 {
+  margin: 0 0 14px;
+  color: #1b1b1b;
+  font-size: clamp(1.08rem, 1.6vw, 1.35rem);
+  line-height: 1.2;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.subpage-rich-text {
+  color: #1f1f1f;
+  font-size: clamp(1.02rem, 1.2vw, 1.18rem);
+  line-height: 1.72;
+  font-weight: 300;
+}
+
+.subpage-rich-text > *:first-child {
+  margin-top: 0;
+}
+
+.subpage-rich-text > *:last-child {
+  margin-bottom: 0;
+}
+
+.subpage-rich-text h2 {
+  margin: clamp(34px, 5vw, 56px) 0 12px;
+  color: var(--color-brand);
+  font-size: clamp(1.16rem, 1.7vw, 1.5rem);
+  line-height: 1.18;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.subpage-rich-text h3 {
+  margin: 28px 0 10px;
+  font-size: clamp(1.03rem, 1.25vw, 1.18rem);
+  line-height: 1.25;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.subpage-rich-text p,
+.subpage-rich-text ul,
+.subpage-rich-text ol {
+  margin: 0 0 1em;
+}
+
+.subpage-rich-text a {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.subpage-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: clamp(28px, 4vw, 48px);
+}
+
+.subpage-gallery__image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.subpage-empty {
+  margin: 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+.subpage-footer {
+  min-height: clamp(520px, 72vh, 760px);
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  border-bottom: none;
+}
+
+.subpage-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.58));
+}
+
+@media (max-width: 768px) {
+  .subpage-content-container {
+    padding-top: 38px;
+    padding-bottom: 58px;
+  }
+
+  .subpage-content-section::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: 0;
+    height: 100vh;
+  }
+
+  .subpage-rich-text {
+    font-size: 1rem;
+    line-height: 1.62;
+  }
+
+  .subpage-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .subpage-footer {
+    min-height: auto;
+  }
+}
+
+/* =========================================================================
    SCROLL-REVEAL SYSTEM
    ========================================================================= */
 .reveal {
@@ -1720,6 +1964,11 @@ body {
   color: var(--color-brand);
 }
 
+.footer-regulamin-link {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
 
 .footer-logo-link {
   display: block;

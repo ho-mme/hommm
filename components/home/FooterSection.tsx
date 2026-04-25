@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import type { MouseEvent } from 'react';
 import { SectionBg } from '../SectionBg';
 import type { SectionContent } from '@/lib/content';
@@ -23,6 +24,8 @@ interface FooterSectionProps {
   onNavigatePlaces: () => void;
   onNavigateReservation: () => void;
   bgStyle: React.CSSProperties;
+  hrefPrefix?: string;
+  enableReveal?: boolean;
 }
 
 export function FooterSection({
@@ -35,11 +38,15 @@ export function FooterSection({
   onNavigatePlaces,
   onNavigateReservation,
   bgStyle,
+  hrefPrefix = '',
+  enableReveal = true,
 }: FooterSectionProps) {
   const handleFooterNavClick = (
     event: MouseEvent<HTMLAnchorElement>,
     targetId: string,
   ) => {
+    if (hrefPrefix) return;
+
     event.preventDefault();
     document
       .getElementById(targetId)
@@ -56,9 +63,9 @@ export function FooterSection({
     >
       <SectionBg src={stopkaSection?.bgImage || '/assets/footer.webp'} />
       <div className="container footer-container">
-        <div className="footer-brand reveal reveal--scale">
+        <div className={enableReveal ? 'footer-brand reveal reveal--scale' : 'footer-brand'}>
           <a
-            href="#rezerwuj"
+            href={`${hrefPrefix}#rezerwuj`}
             onClick={onLogoClick}
             className="footer-logo-link"
           >
@@ -73,7 +80,7 @@ export function FooterSection({
 
           <div className="footer-nav-group">
             <a
-              href="#koncept"
+              href={`${hrefPrefix}#koncept`}
               className="footer-nav-link"
               onClick={(event) => handleFooterNavClick(event, 'koncept')}
             >
@@ -100,20 +107,33 @@ export function FooterSection({
 
         <div className="footer-grid">
           <div
-            className="footer-column footer-column--corporate reveal reveal--up"
-            style={{ '--reveal-delay': '100ms' } as React.CSSProperties}
+            className={enableReveal
+              ? 'footer-column footer-column--corporate reveal reveal--up'
+              : 'footer-column footer-column--corporate'}
+            style={enableReveal ? ({ '--reveal-delay': '100ms' } as React.CSSProperties) : undefined}
           >
             <h3 className="footer-column__title">{c(stopkaSection, 'corporate_title') || t('footer.corporate')}</h3>
             <div className="footer-column__content">
               <p>{settings.companyName}</p>
               <p>{settings.companyAddress}</p>
               <p>NIP {settings.companyNip}</p>
+              <Link
+                href="/regulamin"
+                className="footer-contact__link footer-regulamin-link"
+                style={{ marginTop: '8px' }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                REGULAMIN
+              </Link>
             </div>
           </div>
 
           <div
-            className="footer-column footer-column--contact reveal reveal--up"
-            style={{ '--reveal-delay': '200ms' } as React.CSSProperties}
+            className={enableReveal
+              ? 'footer-column footer-column--contact reveal reveal--up'
+              : 'footer-column footer-column--contact'}
+            style={enableReveal ? ({ '--reveal-delay': '200ms' } as React.CSSProperties) : undefined}
           >
             <h3 className="footer-column__title">{c(stopkaSection, 'contact_title') || t('footer.contact')}</h3>
             <div className="footer-column__content footer-contact">

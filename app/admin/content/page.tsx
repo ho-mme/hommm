@@ -65,11 +65,12 @@ export default async function ContentListPage() {
           {sections.map((section) => {
             const contentPl = section.contentPl as Record<string, unknown> | null;
             const previewPl = getPreviewText(contentPl);
+            const adminSlug = section.page.slug === 'home' ? section.slug : section.page.slug;
 
             return (
               <Link
                 key={section.id}
-                href={`/admin/content/${section.slug}`}
+                href={`/admin/content/${adminSlug}`}
                 className="block group"
               >
                 <Card className="transition-colors hover:border-primary/50">
@@ -83,7 +84,7 @@ export default async function ContentListPage() {
                           {section.titlePl || section.slug}
                         </h3>
                         <span className="text-xs font-mono text-muted-foreground">
-                          /{section.slug}
+                          /{adminSlug}
                         </span>
                         <Badge
                           variant={section.isVisible ? 'default' : 'secondary'}
