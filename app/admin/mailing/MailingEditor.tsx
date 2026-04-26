@@ -154,7 +154,7 @@ export function MailingEditor({ initialTemplates, initialLogoUrl }: Props) {
       {(Object.keys(TEMPLATE_LABELS) as TemplateKey[]).map((key) => {
         const previewBody = interpolate(templates[key].body, SAMPLE_VARS);
         const previewSubject = interpolate(templates[key].subject, SAMPLE_VARS);
-        const previewHtml = emailLayout(previewBody, logoUrl);
+        const previewHtml = emailLayout(previewBody, logoUrl, true);
 
         return (
           <TabsContent key={key} value={key} className="mt-0">

@@ -10,9 +10,10 @@ function escapeAttr(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-export function emailLayout(content: string, logoUrl: string | null) {
-  const logoHtml = logoUrl
-    ? `<img src="${escapeAttr(toAbsoluteUrl(logoUrl))}" alt="HOMMM" width="120" style="display:block;margin:0 auto 16px" />`
+export function emailLayout(content: string, logoUrl: string | null, forPreview = false) {
+  const logoSrc = logoUrl ? (forPreview ? logoUrl : toAbsoluteUrl(logoUrl)) : '';
+  const logoHtml = logoSrc
+    ? `<img src="${escapeAttr(logoSrc)}" alt="HOMMM" width="120" style="display:block;margin:0 auto 16px" />`
     : '';
   return `<!doctype html><html><body style="margin:0;background:#f3f4f6">
     <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:600px;margin:24px auto;padding:24px;background:#fff;border-radius:8px">

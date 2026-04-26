@@ -72,8 +72,16 @@ export default async function SubPage({ params }: Props) {
 
   const stopkaSection = homeSections.find((section) => section.slug === 'stopka');
 
+  const pageBg = page.sections[0];
+  const pageBgStyle = (pageBg?.bgImage || pageBg?.bgColor)
+    ? {
+        '--subpage-bg-image': pageBg.bgImage ? `url(${pageBg.bgImage})` : 'none',
+        '--subpage-bg-color': pageBg.bgColor || 'transparent',
+      } as React.CSSProperties
+    : undefined;
+
   return (
-    <main className="subpage-shell">
+    <main className="subpage-shell" style={pageBgStyle}>
       {isRegulaminPage ? (
         <header className="subpage-logo-spacer" aria-label="HOMMM">
           <Link href="/" className="subpage-logo-link" aria-label="Przejdź na stronę główną">
@@ -110,12 +118,6 @@ export default async function SubPage({ params }: Props) {
               <article
                 key={section.id}
                 className="subpage-content-block"
-                style={{
-                  backgroundColor: section.bgColor || undefined,
-                  backgroundImage: section.bgImage ? `url(${section.bgImage})` : undefined,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
               >
                 {section.titlePl && (
                   <h2>{section.titlePl}</h2>

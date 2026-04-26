@@ -39,7 +39,8 @@
 body {
   margin: 0;
   font-family: sans-serif;
-  background-color: #f0f0f0;
+  background-color: #ffffff;
+  overflow-x: clip;
 }
 
 /* Baza dla kazdej sekcji */
@@ -1110,8 +1111,10 @@ body {
 
 .subpage-shell {
   min-height: 100vh;
-  background-color: #111;
-  background-image: url('/assets/hero.webp');
+  width: 100%;
+  overflow-x: clip;
+  background-color: var(--subpage-bg-color, #111);
+  background-image: var(--subpage-bg-image, url('/assets/hero.webp'));
   background-size: cover;
   background-position: center 70%;
   background-repeat: no-repeat;
@@ -1175,22 +1178,10 @@ body {
   position: relative;
   isolation: isolate;
   align-items: flex-start;
-  background: #111;
+  background: transparent;
   border-bottom: none;
   overflow: hidden;
   padding: 0 var(--container-gutter);
-}
-
-.subpage-content-section::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: url('/assets/hero.webp');
-  background-size: cover;
-  background-position: center 70%;
-  background-repeat: no-repeat;
 }
 
 .subpage-content-container {
@@ -1211,7 +1202,6 @@ body {
 
 .subpage-content-block {
   width: 100%;
-  max-width: 920px;
 }
 
 .subpage-content-block+.subpage-content-block {
@@ -1322,18 +1312,14 @@ body {
 }
 
 @media (max-width: 768px) {
+  .subpage-shell {
+    background-image: none;
+    background-color: #ffffff;
+  }
+
   .subpage-content-container {
     padding-top: 38px;
     padding-bottom: 58px;
-  }
-
-  .subpage-content-section::before {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: auto;
-    left: 0;
-    height: 100vh;
   }
 
   .subpage-rich-text {
