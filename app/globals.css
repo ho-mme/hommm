@@ -952,9 +952,9 @@ body {
   --menu-density: 0.5;
   --menu-logo-scale: 0.72;
   top: 0;
-  background-color: rgba(0, 0, 0, 0.004);
-  backdrop-filter: blur(2.5px);
-  -webkit-backdrop-filter: blur(2.5px);
+  background-color: rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .top-menu-shell {
