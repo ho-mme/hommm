@@ -2,15 +2,6 @@ import type { SectionContent, GalleryImageData } from '@/lib/content';
 
 export const BRAND_COLOR = '#be1622';
 export const SCROLL_COMPACT_THRESHOLD = 10;
-export const DISMISS_KEYS = new Set([
-  'ArrowDown',
-  'ArrowUp',
-  'PageDown',
-  'PageUp',
-  'Home',
-  'End',
-  ' ',
-]);
 
 export type ExpandableSection = 'sec2' | 'sec3';
 

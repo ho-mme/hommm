@@ -18,7 +18,6 @@ import type { SiteSettingsMap } from '@/lib/settings';
 import {
   BRAND_COLOR,
   SCROLL_COMPACT_THRESHOLD,
-  DISMISS_KEYS,
   getSectionBySlug,
   getGalleryWithFallback,
   type ExpandableSection,
@@ -294,7 +293,7 @@ export function HomeClient({ sections: initialSections, settings, pricingRules =
           lastScrollYRef.current = currentScrollY;
         }
 
-        if (expandedSection && isMobileRef.current) {
+        if (expandedSection) {
           const expandedWrapperId =
             expandedSection === 'sec2' ? 'koncept' : 'miejsca';
           const expandedWrapper = document.getElementById(expandedWrapperId);
@@ -338,27 +337,6 @@ export function HomeClient({ sections: initialSections, settings, pricingRules =
     elements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
   }, [activeView, expandedSection]);
-
-  useEffect(() => {
-    if (!expandedSection || isMobileRef.current) return;
-
-    const hideExpandedSection = () => setExpandedSection(null);
-    const onWheel = () => hideExpandedSection();
-    const onTouchMove = () => hideExpandedSection();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (DISMISS_KEYS.has(event.key)) hideExpandedSection();
-    };
-
-    window.addEventListener('wheel', onWheel, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      window.removeEventListener('wheel', onWheel);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('keydown', onKeyDown);
-    };
-  }, [expandedSection]);
 
   const forcedMenuColors: MenuColors | null = isRedMenuMode
     ? { font: BRAND_COLOR, logo: BRAND_COLOR }
