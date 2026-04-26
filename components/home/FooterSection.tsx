@@ -1,10 +1,10 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import type { MouseEvent } from 'react';
 import { SectionBg } from '../SectionBg';
 import type { SectionContent } from '@/lib/content';
+import { REGULAMIN_URL } from '@/lib/public-links';
 import type { SiteSettingsMap } from '@/lib/settings';
 import {
   MailIcon,
@@ -117,15 +117,15 @@ export function FooterSection({
               <p>{settings.companyName}</p>
               <p>{settings.companyAddress}</p>
               <p>NIP {settings.companyNip}</p>
-              <Link
-                href="/regulamin"
+              <a
+                href={REGULAMIN_URL}
                 className="footer-contact__link footer-regulamin-link"
                 style={{ marginTop: '8px' }}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 REGULAMIN
-              </Link>
+              </a>
             </div>
           </div>
 

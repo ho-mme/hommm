@@ -2287,13 +2287,16 @@ body {
   font-size: 12px;
   color: #666;
   line-height: 1.4;
-  cursor: pointer;
 }
 
 .reservation-modal__checkbox input[type="checkbox"] {
   margin-top: 2px;
   accent-color: var(--color-brand);
   flex-shrink: 0;
+}
+
+.reservation-modal__checkbox label {
+  cursor: pointer;
 }
 
 .reservation-modal__checkbox a {

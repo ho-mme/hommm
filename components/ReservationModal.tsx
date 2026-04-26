@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useId } from 'react';
 import { format } from 'date-fns';
 import { useLocale } from '@/lib/i18n';
+import { REGULAMIN_URL } from '@/lib/public-links';
 import { PHONE_REGEX } from '@/lib/validations';
 import { XIcon } from 'lucide-react';
 
@@ -44,6 +45,7 @@ export function ReservationModal({
   const [comment, setComment] = useState('');
   const [rodo, setRodo] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const rodoId = useId();
 
   const markTouched = (field: string) =>
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -272,20 +274,21 @@ export function ReservationModal({
                 />
               </label>
 
-              <label className="reservation-modal__checkbox">
+              <div className="reservation-modal__checkbox">
                 <input
+                  id={rodoId}
                   type="checkbox"
                   checked={rodo}
                   onChange={(e) => setRodo(e.target.checked)}
                   required
                 />
                 <span>
-                  {t('reservation.modal.rodo')}{' '}
-                  <a href="/regulamin" target="_blank" rel="noopener noreferrer">
+                  <label htmlFor={rodoId}>{t('reservation.modal.rodo')}</label>{' '}
+                  <a href={REGULAMIN_URL} target="_blank" rel="noopener noreferrer">
                     {t('reservation.modal.rodo_link')}
                   </a>
                 </span>
-              </label>
+              </div>
 
               {formState === 'error' && (
                 <p className="reservation-modal__error">{errorMsg}</p>
