@@ -1812,7 +1812,24 @@ body {
   .top-menu.is-compact {
     --menu-density: 0.72;
     --menu-logo-scale: 0.78;
-    top: var(--floating-logo-top);
+    top: 0;
+    background-color: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .floating-menu-logo.is-visible {
+    width: calc(var(--floating-logo-width) * 0.84);
+  }
+
+  .floating-menu-logo.is-visible .floating-menu-logo__mark {
+    background-color: var(--color-brand);
+  }
+
+  .top-menu.is-compact .top-menu-shell {
+    min-height: calc(
+      var(--floating-logo-top) * 2 + var(--floating-logo-width) * 0.84 / 4.42
+    );
   }
 
   .top-menu-shell {
@@ -2153,13 +2170,17 @@ body {
   }
 
   .footer-nav-group {
-    gap: 16px;
-    flex-wrap: wrap;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: clamp(8px, 3vw, 18px);
     justify-content: center;
+    width: 100%;
   }
 
   .footer-nav-link {
-    font-size: 1.2rem;
+    min-width: 0;
+    font-size: clamp(0.9rem, 3.6vw, 1.1rem);
+    letter-spacing: 0.04em;
   }
 
   .footer-column--contact .footer-column__title,
